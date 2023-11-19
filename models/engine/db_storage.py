@@ -76,38 +76,21 @@ class DBStorage:
         self.__session.remove()
 
     def get(self, cls, id):
-        """Retrive an Object based of the class and its Id
-
-        Args:
-            id (cls): Classs type of the object
-
-        Returns:
-            _type_: _description_
-        """
-        if cls and id:
-            try:
-                return self.__session.query(cls).get(id)
-            except Exception as e:
-                print(f"Error: {str(e)}")
+        '''get:
+        retrieve an object from the file storage by class and id.
+        '''
+        if cls in classes.values() and id and type(id) == str:
+            d_obj = self.all(cls)
+            for key, value in d_obj.items():
+                if key.split(".")[1] == id:
+                    return value
         return None
 
-    def get(self, cls=None):
-        """Counts the number of objects in the storage
-
-        Args:
-            id (cls): Class type to count the objects
-
-        Returns:
-            Return : number of objects in the storage.
-        """
-        if cls:
-            try:
-                return self.__session.query(cls).count()
-            except Exception as e:
-                print(f"Error: {str(e)}")
-        else:
-            try:
-                return len(self.all())
-            except Exception as e:
-                print(f"Error: {str(e)}")
-        return 0
+    def count(self, cls=None):
+        '''count:
+        count the number of objects in storage matching the given class.
+        '''
+        data = self.all(cls)
+        if cls in classes.values():
+            data = self.all(cls)
+        return len(data)
